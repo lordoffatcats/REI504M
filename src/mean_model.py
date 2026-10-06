@@ -1,9 +1,9 @@
 import torch
-import rei504m_dataset
+import Tree_Dataset
 
-dataset = rei504m_dataset.TreesDataset(json_path='./Trees.json', image_root='./')
+dataset = Tree_Dataset.TreesDataset(json_path='./Datasets/sample_dataset/Trees.json', image_root='./Datasets/sample_dataset/')
 
-train_loader, val_loader, test_loader = rei504m_dataset.get_dataloaders(dataset, batch_size=30, val_ratio=0.0, test_ratio = 0.4)
+train_loader, val_loader, test_loader = Tree_Dataset.get_dataloaders(dataset, batch_size=30, val_ratio=0.0, test_ratio = 0.4)
 
 def calculate_mean_dbh(loader):
     total_dbh = 0.0
