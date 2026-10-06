@@ -61,24 +61,18 @@ class TreesDataset(Dataset):
 
     def __init__(
         self,
-        json_path,
-        image_root=None,
+        dataset_path,
         normalize_to_ground=True,
         dtype=torch.float32,
     ):
         """ Creates a dataset from json.
         Input:
-            json_path: path of dataset in json format
-            image_root: path of images folder referenced in json file
-            normalize_to_ground: whether to subtract ground level from camera and circle coordinates
+            dataset_path: path of directory containing "Trees.json" and "images/" directory.
+            normalize_to_ground: whether to subtract ground level from camera and circle. coordinates
         """
-        self.json_path = Path(json_path)
+        self.json_path = dataset_path + 'Trees.json'
+        self.dataset_path=dataset_path
         self.normalize_to_ground = normalize_to_ground
-        self.image_root = (
-            Path(image_root)
-            if image_root is not None
-            else self.json_path.parent
-        )
         self.dtype = dtype
 
         with open(self.json_path, "r") as f:
@@ -94,7 +88,7 @@ class TreesDataset(Dataset):
         """
         image_path = Path(image_path)
         if not image_path.is_absolute():
-            image_path = self.image_root / image_path
+            image_path = self.dataset_path / image_path
         image = Image.open(image_path).convert("RGB")
         return TF.to_tensor(image)
 
