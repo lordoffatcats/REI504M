@@ -1,5 +1,5 @@
 import torch
-import Tree_Dataset
+from .. import src.utils.Tree_Dataset
 
 dataset = Tree_Dataset.TreesDataset(dataset_path='../Datasets/sample_dataset/')
 

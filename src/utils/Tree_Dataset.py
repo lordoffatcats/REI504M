@@ -3,8 +3,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader, random_split
 from PIL import Image
 import torchvision.transforms.functional as TF
-import json
-import re
+#import re
 from pathlib import Path
 
 
@@ -257,65 +256,65 @@ def collate_trees(batch):
         },
     )
 
-def get_dataloaders(dataset, batch_size=32, val_ratio=0.2, test_ratio=0.2, seed=42, num_workers=0, pin_memory=False, persistent_workers=False):
-    """ Creates train,val,test, dataloaders for a given input dataset.
-    Input:
-        dataset: an instance of TreesDataset,
-        batch_size: size of training batch,
-        val_ratio: ratio of examples in validation set,
-        test_ratio: ratio of examples in test set,
-        seed: seed so the same dataset split can be reproduced,
-        num_workers: specifies how many parallel subprocesses are used for loading data.
-            num_workers=0: means that the main training process handles all loading (may cause bottleneck).
-            num_workers>0: means that multiple parallel subprocesses can load data and store it in a queue (yields better GPU utilization).
-            According to Google a good starting point is 2 workers, some say that matching the amount of CPU cores is also a good heuristic.
-        The ratio of training examples is inferred from val_ratio and test_ratio.
-        pin_memory: Page locks in ram so CUDA driver can use direct memory access. 
-        persistent_workers: Keeps dataloading workers alive between epochs instead of shutting down and restarting them.
-    Returns:
-        train_loader, val_loader, test_loader: DataLoader instances for the dataset splits.
-    """
-    dataset_size=len(dataset)
+# def get_dataloaders(dataset, batch_size=32, val_ratio=0.2, test_ratio=0.2, seed=42, num_workers=0, pin_memory=False, persistent_workers=False):
+#     """ Creates train,val,test, dataloaders for a given input dataset.
+#     Input:
+#         dataset: an instance of TreesDataset,
+#         batch_size: size of training batch,
+#         val_ratio: ratio of examples in validation set,
+#         test_ratio: ratio of examples in test set,
+#         seed: seed so the same dataset split can be reproduced,
+#         num_workers: specifies how many parallel subprocesses are used for loading data.
+#             num_workers=0: means that the main training process handles all loading (may cause bottleneck).
+#             num_workers>0: means that multiple parallel subprocesses can load data and store it in a queue (yields better GPU utilization).
+#             According to Google a good starting point is 2 workers, some say that matching the amount of CPU cores is also a good heuristic.
+#         The ratio of training examples is inferred from val_ratio and test_ratio.
+#         pin_memory: Page locks in ram so CUDA driver can use direct memory access. 
+#         persistent_workers: Keeps dataloading workers alive between epochs instead of shutting down and restarting them.
+#     Returns:
+#         train_loader, val_loader, test_loader: DataLoader instances for the dataset splits.
+#     """
+#     dataset_size=len(dataset)
 
-    assert (val_ratio >= 0 and test_ratio >= 0 and val_ratio+test_ratio <= 1), "Invalid val/test ratios."
-    val_size = int(val_ratio * dataset_size)
-    test_size = int(test_ratio * dataset_size)
-    train_size = dataset_size-val_size-test_size
+#     assert (val_ratio >= 0 and test_ratio >= 0 and val_ratio+test_ratio <= 1), "Invalid val/test ratios."
+#     val_size = int(val_ratio * dataset_size)
+#     test_size = int(test_ratio * dataset_size)
+#     train_size = dataset_size-val_size-test_size
 
-    generator = torch.Generator().manual_seed(seed)
+#     generator = torch.Generator().manual_seed(seed)
 
-    train_dataset, val_dataset, test_dataset = random_split(
-        dataset,
-        [train_size, val_size, test_size],
-        generator=generator,
-    )
+#     train_dataset, val_dataset, test_dataset = random_split(
+#         dataset,
+#         [train_size, val_size, test_size],
+#         generator=generator,
+#     )
 
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=batch_size,
-        shuffle=True,
-        collate_fn=collate_trees,
-        num_workers=num_workers,
-        pin_memory=pin_memory,
-        persistent_workers=persistent_workers
-    )
+#     train_loader = DataLoader(
+#         train_dataset,
+#         batch_size=batch_size,
+#         shuffle=True,
+#         collate_fn=collate_trees,
+#         num_workers=num_workers,
+#         pin_memory=pin_memory,
+#         persistent_workers=persistent_workers
+#     )
 
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=batch_size,
-        shuffle=False,
-        collate_fn=collate_trees,
-        num_workers=num_workers,
-        pin_memory=pin_memory,
-    )
+#     val_loader = DataLoader(
+#         val_dataset,
+#         batch_size=batch_size,
+#         shuffle=False,
+#         collate_fn=collate_trees,
+#         num_workers=num_workers,
+#         pin_memory=pin_memory,
+#     )
 
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=batch_size,
-        shuffle=False,
-        collate_fn=collate_trees,
-        num_workers=num_workers,
-        pin_memory=pin_memory,
-    )
+#     test_loader = DataLoader(
+#         test_dataset,
+#         batch_size=batch_size,
+#         shuffle=False,
+#         collate_fn=collate_trees,
+#         num_workers=num_workers,
+#         pin_memory=pin_memory,
+#     )
 
-    return train_loader, val_loader, test_loader
+#     return train_loader, val_loader, test_loader
